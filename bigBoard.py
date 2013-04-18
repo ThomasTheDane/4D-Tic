@@ -1,3 +1,5 @@
+import smallBoard
+
 class meta_board(): #tic-tac-toe board object
 	def __init__(self):
 		self.board_list = [tic_tac_toe_board() for i in range(9)] #create list of boards
