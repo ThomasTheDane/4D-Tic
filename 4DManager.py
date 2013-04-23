@@ -3,11 +3,17 @@ import smallBoard
 
 class small_board():
 	def __init__(self):
-		self.smallBoardList = ["X" for i in range(9)]
+		self.smallBoardList = [" " for i in range(9)]
 		
 class big_board(): #tic-tac-toe board object
 	def __init__(self):
 		self.bigBoardList = [small_board() for i in range(9)]
+		
+	def receiveInput(self, bigIndex, smallIndex, symbolInput):
+		self.bigBoardList[bigIndex].smallBoardList[smallIndex] = symbolInput
+	
+	def getSpotSymbol(self, bigIndex, smallIndex):
+		return self.bigBoardList[bigIndex].smallBoardList[smallIndex]
 		
 	#prints out the board
 	def print_board(self):
@@ -35,7 +41,8 @@ class big_board(): #tic-tac-toe board object
 		
 class aGame():
 	def __init__(self):
-		theBigBoard = big_board()
+		self.theBigBoard = big_board()
+	
 	def getPlayers(self):
 		isValidInput = False
 		while(not isValidInput):
@@ -44,7 +51,7 @@ class aGame():
 				self.playersSymbol = []
 				self.numPlayers = int(self.numPlayers)
 				isValidInput = True
-			except:
+			except ValueError:
 				isValidInput = False
 
 		for i in range(0, self.numPlayers):
@@ -62,10 +69,31 @@ class aGame():
 		for i in range(0, self.numPlayers):
 			print("Player " + str(i + 1) + " is symbol " + self.playersSymbol[i])
 
+	def askForInput(self):
+			isValidMove = False			
+			while(not isValidMove):
+				try:
+					tryMove = input("where would you like to place " + self.playersSymbol[self.currentTurn] + " : ")
+					bigIndexMove = int(tryMove[0])
+					smallIndexMove = int(tryMove[2])
+					if(bigIndexMove == 0 or bigIndexMove > 9):
+						raise ValueError
+					isValidMove = True
+				except ValueError:
+					print("Please input location in format {big board spot,small board spot}")
+					isValidMove = False
+			
+			self.theBigBoard.receiveInput(bigIndexMove,smallIndexMove, self.playersSymbol[self.currentTurn])
+			
 	def startGame(self):
+		self.currentTurn = 0
 		self.getPlayers()
+		
+	def showBoard(self):
+		self.theBigBoard.print_board()
 		
 theGame = aGame()
 theGame.startGame()
-theGame.printPlayers()
+theGame.askForInput()
+theGame.showBoard()
 
