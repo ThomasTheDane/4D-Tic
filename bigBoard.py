@@ -1,22 +1,22 @@
 import smallBoard
 
-class meta_board(): #tic-tac-toe board object
+class big_board(): #tic-tac-toe board object
 	def __init__(self):
 		self.board_list = [tic_tac_toe_board() for i in range(9)] #create list of boards
 		self.win_list = [None for i in range(9)] #create empty list to hold the winners of the boards
 
 	def check_win_p(self): #returns the wining player
-	for player in ('x', 'o'): #iterate through the players
-		positions = set(get_player_wins(player)) #create a set of the boards the player has won
-		for win_line in win_combos: #iterate through every possible winning combination
-			win = True #set the default to True
-			for pos in win_line: #compare positions
-				if pos not in positions: #if any positions is not in the winnign combination
-					win = False #set it to False
-					break #escape loop
-			if win:
-				return player #return the winning player
-	return None #return None if no one won
+		for player in ('x', 'o'): #iterate through the players
+			positions = set(get_player_wins(player)) #create a set of the boards the player has won
+			for win_line in win_combos: #iterate through every possible winning combination
+				win = True #set the default to True
+				for pos in win_line: #compare positions
+					if pos not in positions: #if any positions is not in the winnign combination
+						win = False #set it to False
+						break #escape loop
+				if win:
+					return player #return the winning player
+		return None #return None if no one won
 
 	def get_player_wins(self, player): #returns a list of all boards the player has won
 		return [pos for pos, value in enumerate(self.win_list) if value == player]
@@ -30,3 +30,5 @@ class meta_board(): #tic-tac-toe board object
 			return True
 		else: 
 			return False
+	def print_board(self):
+		pass
