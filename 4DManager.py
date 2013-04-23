@@ -34,27 +34,33 @@ class big_board(): #tic-tac-toe board object
 		print("#########################")
 		
 class aGame():
-	numPlayers = 0
-
 	def __init__(self):
 		theBigBoard = big_board()
 	def getPlayers(self):
-		numPlayers = input("Number of Players: ")
-		playersSymbol = []
-		numPlayers = int(numPlayers)
-		for i in range(0, numPlayers):
+		isValidInput = False
+		while(not isValidInput):
+			try:
+				self.numPlayers = input("Number of Players: ")
+				self.playersSymbol = []
+				self.numPlayers = int(self.numPlayers)
+				isValidInput = True
+			except:
+				isValidInput = False
+
+		for i in range(0, self.numPlayers):
 			isValidInput = False
 			while(not isValidInput):
 				inputAsk = "Player number " + str(i+1) + " symbol is : "
-				playersSymbol += input(inputAsk)
-				if(len(playersSymbol[i]) == 1):
+				self.playersSymbol += input(inputAsk)
+				if(len(self.playersSymbol[i]) == 1 and not(self.playersSymbol[i] in self.playersSymbol[:-1])):
 					isValidInput = True
 				else:
-					playersSymbol.pop()
+					self.playersSymbol.pop()
+
 					
 	def printPlayers(self):
-		for i in range(0, numPlayers):
-			print("Player " + i + " is symbol " + playerSymbol[i])
+		for i in range(0, self.numPlayers):
+			print("Player " + str(i + 1) + " is symbol " + self.playersSymbol[i])
 
 	def startGame(self):
 		self.getPlayers()
