@@ -14,7 +14,7 @@ class big_board(): #tic-tac-toe board object
 	
 	def getSpotSymbol(self, bigIndex, smallIndex):
 		return self.bigBoardList[bigIndex].smallBoardList[smallIndex]
-		
+	
 	#prints out the board
 	def print_board(self):
 		print("#########################")
@@ -59,7 +59,7 @@ class aGame():
 			while(not isValidInput):
 				inputAsk = "Player number " + str(i+1) + " symbol is : "
 				self.playersSymbol += input(inputAsk)
-				if(len(self.playersSymbol[i]) == 1 and not(self.playersSymbol[i] in self.playersSymbol[:-1])):
+				if(len(self.playersSymbol[i]) == 1 and not(self.playersSymbol[i] in self.playersSymbol[:-1]) and self.playersSymbol[i] != " "):
 					isValidInput = True
 				else:
 					self.playersSymbol.pop()
@@ -78,9 +78,11 @@ class aGame():
 					smallIndexMove = int(tryMove[2])
 					if(bigIndexMove == 0 or bigIndexMove > 9):
 						raise ValueError
+					if(self.theBigBoard.getSpotSymbol(bigIndexMove, smallIndexMove) != " "):
+						raise ValueError
 					isValidMove = True
-				except ValueError:
-					print("Please input location in format {big board spot,small board spot}")
+				except:
+					print("Please input location in format {big board spot,small board spot} with some where that isn't taken")
 					isValidMove = False
 			
 			self.theBigBoard.receiveInput(bigIndexMove,smallIndexMove, self.playersSymbol[self.currentTurn])
@@ -94,6 +96,8 @@ class aGame():
 		
 theGame = aGame()
 theGame.startGame()
+theGame.askForInput()
+theGame.showBoard()
 theGame.askForInput()
 theGame.showBoard()
 
