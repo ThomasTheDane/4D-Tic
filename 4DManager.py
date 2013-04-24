@@ -45,6 +45,7 @@ class aGame():
 	
 	def getPlayersSymbol(self):
 		isValidInput = False
+		self.playersSymbol = []
 		for i in range(0, self.numPlayers):
 			isValidInput = False
 			while(not isValidInput):
@@ -88,7 +89,20 @@ class aGame():
 	
 	def nextTurn(self):
 		self.showBoard()
-		self.askForInput()
+		if(self.playersType[self.currentTurn] == 'Human'):
+			self.askForInput()
+		elif(self.playersType[self.currentTurn] == 'AI'):
+			self.makeAIMove()
+		elif(self.playersType[self.currentTurn] == 'Monkey'):
+			self.makeMonkeyMove()
+		else:
+			print('Critical Mission Failure #1')
+		
+	def makeAIMove(self):
+		makeMonkeyMove()
+
+	def makeMonkeyMove(self):
+		pass
 		
 	def playTheGame(self):
 		self.gameIsGoing = True
@@ -115,13 +129,11 @@ class aGame():
 				inputAsk = "Player number " + str(i+1) + " type is (Monkey, AI, Human): "
 				strInput = input(inputAsk)
 				strInput = str(strInput)
-				self.playersType = strInput
-				print(self.playersType)
-				if(self.playersType == 'Monkey' or self.playersType == 'AI' or self.playersType == 'Human'):
+				if(strInput == 'Monkey' or strInput == 'AI' or strInput == 'Human'):
 					isValidInput = True
-				else:
-					self.playersType.pop()
+					self.playersType += [strInput]
+				
 			
 theGame = aGame()
 theGame.startGame()
-theGame.playTheGame()
+#theGame.playTheGame()
