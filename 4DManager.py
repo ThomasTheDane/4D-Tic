@@ -10,10 +10,10 @@ class big_board(): #tic-tac-toe board object
 		self.bigBoardList = [small_board() for i in range(9)]
 		
 	def receiveInput(self, bigIndex, smallIndex, symbolInput):
-		self.bigBoardList[bigIndex].smallBoardList[smallIndex] = symbolInput
+		self.bigBoardList[bigIndex-1].smallBoardList[smallIndex-1] = symbolInput
 	
 	def getSpotSymbol(self, bigIndex, smallIndex):
-		return self.bigBoardList[bigIndex].smallBoardList[smallIndex]
+		return self.bigBoardList[bigIndex-1].smallBoardList[smallIndex-1]
 	
 	#prints out the board
 	def print_board(self):
@@ -43,17 +43,8 @@ class aGame():
 	def __init__(self):
 		self.theBigBoard = big_board()
 	
-	def getPlayers(self):
+	def getPlayersSymbol(self):
 		isValidInput = False
-		while(not isValidInput):
-			try:
-				self.numPlayers = input("Number of Players: ")
-				self.playersSymbol = []
-				self.numPlayers = int(self.numPlayers)
-				isValidInput = True
-			except ValueError:
-				isValidInput = False
-
 		for i in range(0, self.numPlayers):
 			isValidInput = False
 			while(not isValidInput):
@@ -89,15 +80,48 @@ class aGame():
 			
 	def startGame(self):
 		self.currentTurn = 0
-		self.getPlayers()
+		self.getPlayerTypes()
+		self.getPlayersSymbol()
 		
 	def showBoard(self):
 		self.theBigBoard.print_board()
+	
+	def nextTurn(self):
+		self.showBoard()
+		self.askForInput()
 		
+	def playTheGame(self):
+		self.gameIsGoing = True
+		while(self.gameIsGoing):
+			self.nextTurn()
+			self.currentTurn += 1
+			if(self.currentTurn == self.numPlayers):
+				self.currentTurn = 0
+	
+	def getPlayerTypes(self):
+		isValidInput = False
+		self.playersType = []
+		while(not isValidInput):
+			try:
+				self.numPlayers = input("Number of Players: ")
+				self.numPlayers = int(self.numPlayers)
+				isValidInput = True
+			except ValueError:
+				isValidInput = False
+
+		for i in range(0, self.numPlayers):
+			isValidInput = False
+			while(not isValidInput):
+				inputAsk = "Player number " + str(i+1) + " type is (Monkey, AI, Human): "
+				strInput = input(inputAsk)
+				strInput = str(strInput)
+				self.playersType = strInput
+				print(self.playersType)
+				if(self.playersType == 'Monkey' or self.playersType == 'AI' or self.playersType == 'Human'):
+					isValidInput = True
+				else:
+					self.playersType.pop()
+			
 theGame = aGame()
 theGame.startGame()
-theGame.askForInput()
-theGame.showBoard()
-theGame.askForInput()
-theGame.showBoard()
-
+theGame.playTheGame()

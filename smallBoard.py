@@ -1,11 +1,4 @@
-win_combos =(set([0, 1, 2]),
-			 set([3, 4, 5]), 
-			 set([6, 7, 8]),
-			 set([0, 3, 6]), 
-			 set([1, 4, 7]), 
-			 set([2, 5, 8]),
-			 set([0, 4, 8]),
-			 set([2, 4, 6])) #All possible winning combinations
+
 
 class tic_tac_toe_board(): #tic-tac-toe board object
 	def __init__(self):
