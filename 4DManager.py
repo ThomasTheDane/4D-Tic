@@ -64,17 +64,21 @@ class cube():
 				return bWin
 		return None
 		
-
-class big_board(): #tic-tac-toe board object
+#big board containing 9 small boards
+class big_board():
+	#initializes the list of small boards
 	def __init__(self):
 		self.bigBoardList = [small_board() for i in range(9)]
 		
+	#acceps inputs into list
 	def receiveInput(self, bigIndex, smallIndex, symbolInput):
 		self.bigBoardList[bigIndex-1].smallBoardList[smallIndex-1] = symbolInput
 	
+	#returns the symbol at the postions
 	def getSpotSymbol(self, bigIndex, smallIndex):
 		return self.bigBoardList[bigIndex-1].smallBoardList[smallIndex-1]
 	
+	#uses cube class to check for victory on big board
 	def checkWinner(self):
 		cube_list = []
 		for win_line in win_combos:
@@ -112,10 +116,13 @@ class big_board(): #tic-tac-toe board object
 		print("#       #       #       #")
 		print("#########################")
 		
+#the class to actually run a game and manage players
 class aGame():
+	#initializes a single big board
 	def __init__(self):
 		self.theBigBoard = big_board()
 	
+	#asks players to input the symbols that will be used for the various players
 	def getPlayersSymbol(self):
 		isValidInput = False
 		self.playersSymbol = []
@@ -135,11 +142,14 @@ class aGame():
 						raise ValueError
 				except ValueError:
 					isValidInput = False
-					
+		self.printPlayers()
+	
+	#prints out a list of who the players are and their corresponding symbols
 	def printPlayers(self):
 		for i in range(0, self.numPlayers):
 			print("Player " + str(i + 1) + " is symbol " + self.playersSymbol[i])
 
+	#asks a human player to input a move, then checks that it is valid
 	def askForInput(self):
 		isValidMove = False
 		while(not isValidMove):
@@ -155,17 +165,20 @@ class aGame():
 			except:
 				print("Please input location in format {big board spot,small board spot} with some where that isn't taken")
 				isValidMove = False
-		
+		#displays the players at the end
 		self.theBigBoard.receiveInput(bigIndexMove,smallIndexMove, self.playersSymbol[self.currentTurn])
 			
+	#starts a game by getting player types and symbols
 	def startGame(self):
 		self.currentTurn = 0
 		self.getPlayerTypes()
 		self.getPlayersSymbol()
 		
+	#prints the whole board
 	def showBoard(self):
 		self.theBigBoard.print_board()
 	
+	#looks at type of player and makes turn accordingly
 	def nextTurn(self):
 		self.showBoard()
 		if(self.playersType[self.currentTurn] == 'Human'):
@@ -176,10 +189,12 @@ class aGame():
 			self.makeMonkeyMove()
 		else:
 			print('Critical Mission Failure #1.1 Subsection A')
-		
+	
+	#the AI movement behavior
 	def makeAIMove(self):
 		self.makeMonkeyMove()
 
+	#Makes random monkey move
 	def makeMonkeyMove(self):
 		#try one until it finds an empty one
 		isValidMove = False
@@ -192,6 +207,7 @@ class aGame():
 				
 		self.theBigBoard.receiveInput(bigIndex,smallIndex, self.playersSymbol[self.currentTurn])
 		
+	#plays a full game until game is done
 	def playTheGame(self):
 		self.gameIsGoing = True
 		while(self.gameIsGoing):
@@ -201,16 +217,19 @@ class aGame():
 				self.currentTurn = 0
 			self.checkVictory()
 
+	#checks for a winner 
 	def checkVictory(self):
 		result = self.theBigBoard.checkWinner()
 		if result != None:
 			self.gameIsGoing = False
 			self.Win(result)
 
+	#shows board and who the winner is
 	def Win(self,winner):
 		self.showBoard()
 		print("The winner is: " + winner)
 
+	#gets the player types (monkey, ai, human)
 	def getPlayerTypes(self):
 		isValidInput = False
 		self.playersType = []
