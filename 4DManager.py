@@ -1,6 +1,8 @@
 import bigBoard
 import smallBoard
+import random
 
+#the possible small board win combinations: 
 win_combos =([0, 1, 2],
 			 [3, 4, 5], 
 			 [6, 7, 8],
@@ -8,22 +10,26 @@ win_combos =([0, 1, 2],
 			 [1, 4, 7], 
 			 [2, 5, 8],
 			 [0, 4, 8],
-			 [2, 4, 6]) #All possible winning combinations
+			 [2, 4, 6])
 
-
+#A small 3x3 board
 class small_board():
+
+	#initialzied the list of empty spots
 	def __init__(self,posList=0):
 		if posList == 0:
 			self.smallBoardList = [" " for i in range(9)]
 		else:
 			self.smallBoardList = posList
 
+	#checks to see if there is a small board win
 	def check_win_p(self):
 		for win_line in win_combos:
 			if self.smallBoardList[win_line[0]] != " " and self.smallBoardList[win_line[0]] == self.smallBoardList[win_line[1]] and self.smallBoardList[win_line[1]] == self.smallBoardList[win_line[2]]:
 				return self.smallBoardList[win_line[0]]
 		return None
 
+	#returns the board list
 	def getPosList(self):
 		return self.smallBoardList
 
@@ -172,10 +178,19 @@ class aGame():
 			print('Critical Mission Failure #1.1 Subsection A')
 		
 	def makeAIMove(self):
-		makeMonkeyMove()
+		self.makeMonkeyMove()
 
 	def makeMonkeyMove(self):
-		pass
+		#try one until it finds an empty one
+		isValidMove = False
+		while(not isValidMove):
+			bigIndex = random.randint(0,8)
+			smallIndex = random.randint(0,8)
+			
+			if(self.theBigBoard.getSpotSymbol(bigIndex, smallIndex) == " "):
+				isValidMove = True
+				
+		self.theBigBoard.receiveInput(bigIndex,smallIndex, self.playersSymbol[self.currentTurn])
 		
 	def playTheGame(self):
 		self.gameIsGoing = True
@@ -193,6 +208,7 @@ class aGame():
 			self.Win(result)
 
 	def Win(self,winner):
+		self.showBoard()
 		print("The winner is: " + winner)
 
 	def getPlayerTypes(self):
