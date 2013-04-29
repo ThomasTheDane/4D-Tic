@@ -106,7 +106,6 @@ class big_board(): #tic-tac-toe board object
 		print("#       #       #       #")
 		print("#########################")
 		
-
 class aGame():
 	def __init__(self):
 		self.theBigBoard = big_board()
@@ -117,35 +116,41 @@ class aGame():
 		for i in range(0, self.numPlayers):
 			isValidInput = False
 			while(not isValidInput):
-				inputAsk = "Player number " + str(i+1) + " symbol is : "
-				self.playersSymbol += input(inputAsk)
-				if(len(self.playersSymbol[i]) == 1 and not(self.playersSymbol[i] in self.playersSymbol[:-1]) and self.playersSymbol[i] != " "):
-					isValidInput = True
-				else:
-					self.playersSymbol.pop()
-
+				try:
+					inputAsk = input("Player number " + str(i+1) + " symbol is: ")
+					if(len(inputAsk) == 1 and inputAsk != " "):
+						if(not(inputAsk in self.playersSymbol)):
+							self.playersSymbol += [inputAsk]
+							isValidInput = True
+						else:
+							print("That character has already been taken")
+					else:
+						print("Please input a single character")
+						raise ValueError
+				except ValueError:
+					isValidInput = False
 					
 	def printPlayers(self):
 		for i in range(0, self.numPlayers):
 			print("Player " + str(i + 1) + " is symbol " + self.playersSymbol[i])
 
 	def askForInput(self):
-			isValidMove = False			
-			while(not isValidMove):
-				try:
-					tryMove = input("where would you like to place " + self.playersSymbol[self.currentTurn] + " : ")
-					bigIndexMove = int(tryMove[0])
-					smallIndexMove = int(tryMove[2])
-					if(bigIndexMove == 0 or bigIndexMove > 9):
-						raise ValueError
-					if(self.theBigBoard.getSpotSymbol(bigIndexMove, smallIndexMove) != " "):
-						raise ValueError
-					isValidMove = True
-				except:
-					print("Please input location in format {big board spot,small board spot} with some where that isn't taken")
-					isValidMove = False
-			
-			self.theBigBoard.receiveInput(bigIndexMove,smallIndexMove, self.playersSymbol[self.currentTurn])
+		isValidMove = False
+		while(not isValidMove):
+			try:
+				tryMove = input("where would you like to place " + self.playersSymbol[self.currentTurn] + " : ")
+				bigIndexMove = int(tryMove[0])
+				smallIndexMove = int(tryMove[2])
+				if(bigIndexMove == 0 or bigIndexMove > 9):
+					raise ValueError
+				if(self.theBigBoard.getSpotSymbol(bigIndexMove, smallIndexMove) != " "):
+					raise ValueError
+				isValidMove = True
+			except:
+				print("Please input location in format {big board spot,small board spot} with some where that isn't taken")
+				isValidMove = False
+		
+		self.theBigBoard.receiveInput(bigIndexMove,smallIndexMove, self.playersSymbol[self.currentTurn])
 			
 	def startGame(self):
 		self.currentTurn = 0
