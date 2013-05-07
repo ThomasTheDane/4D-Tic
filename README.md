@@ -8,8 +8,11 @@ Rules of 4D-Tic-Tac-Toe
 =======================
 
 There can be any number of players 
+
 The players each have a unique symbol, such as X or O or W
+
 Each player takes turn placing their symbol on a 9x9 board
+
 They can place anywhere that doesn't have another symbol on it
 The board is set up as 3x3 grid of 3x3 boards
 There are a few ways to win with the placement of pieces
