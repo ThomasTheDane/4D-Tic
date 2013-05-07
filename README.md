@@ -1,4 +1,4 @@
-z4D-Tic-Tac-Toe
+4D-Tic-Tac-Toe
 ==============
 
 This is a program that allows you to play the fun game of 4D-Tic-Tac-Toe
