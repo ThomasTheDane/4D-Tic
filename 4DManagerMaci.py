@@ -17,12 +17,11 @@ win_combos =([0, 1, 2],
 class small_board():
 
 	#initialzied the list of empty spots
-	def __init__(self,posList=0,current_player = "error"):
+	def __init__(self,posList=0):
 		if posList == 0:
 			self.smallBoardList = [" " for i in range(9)]
 		else:
 			self.smallBoardList = posList
-		self.current_player = current_player
 
 	#checks to see if there is a small board win
 	def check_win_p(self):
@@ -56,29 +55,16 @@ class small_board():
 	def getPosList(self):
 		return self.smallBoardList
 
-	def setup_win_moves(self,current_player):
-		setup_win_list = []
-		for win_line in win_combos:
-			if self.smallBoardList[win_line[0]] == current_player and self.smallBoardList[win_line[1]] == " " and self.smallBoardList[win_line[2]] == " ":
-				setup_win_list.append(win_line[1])
-				setup_win_list.append(win_line[2])
-			if self.smallBoardList[win_line[0]] == " " and self.smallBoardList[win_line[1]] == current_player and self.smallBoardList[win_line[2]] == " ":
-				setup_win_list.append(win_line[0])
-				setup_win_list.append(win_line[2])
-			if self.smallBoardList[win_line[0]] == " " and self.smallBoardList[win_line[1]] == " " and self.smallBoardList[win_line[2]] == current_player :
-				setup_win_list.append(win_line[0])
-				setup_win_list.append(win_line[1])
-		return setup_win_list
 class cube():
 	small_boards =([0,1,2,3,4,5,6,7,8],
 				 [9,10,11,12,13,14,15,16,17], 
 				 [18,19,20,21,22,23,24,25,26],
 				 [0,1,2,9,10,11,18,19,20], 
 				 [3,4,5,12,13,14,21,22,23], 
-				 [6,7,8,15,16,17,24,25,26],
+				 [6,7,8,15,16,17,14,25,26],
 				 [0,3,6,9,12,15,18,21,24],
 				 [1,4,7,10,13,16,19,22,25],
-				 [2,5,8,11,14,17,20,23,26],
+				 [2,5,8,11,14,17,10,23,26],
 				 [0,4,8,9,13,17,18,22,26],
 				 [2,4,6,11,13,15,20,22,24],
 				 [0,1,2,12,13,14,24,25,26],
@@ -100,13 +86,12 @@ class cube():
 				return bWin
 		return None
 		
+#big board containing 9 small boards
+class big_board():
+	#initializes the list of small boards
 	def check_possible_win_cube(self):
 		possible_wins_dict = {}
-		if self.board_num in win_combos[:3]:
-			boards = cube.small_boards
-		else:
-			boards = cube.small_boards[3:]
-		for board in boards:
+		for board in cube.small_boards:
 			temp_list = []
 			for pos in board:
 				temp_list.append(self.poslist[pos])
@@ -118,25 +103,7 @@ class cube():
 					temp_win_pos_list.append((self.board_num[board[pos]//9],int(board[pos]%9)))
 				temp_wins[key] = temp_win_pos_list
 			possible_wins_dict = self.merge_2_dict_list(possible_wins_dict, temp_wins)
-		
 		return possible_wins_dict
-
-
-	def check_setup_cube(self,current_player):
-		possible_setup_list = []
-		if self.board_num in win_combos[:3]:
-			boards = cube.small_boards
-		else:
-			boards = cube.small_boards[3:]
-		for board in boards:
-			temp_list = []
-			for pos in board:
-				temp_list.append(self.poslist[pos])
-			s_wins = small_board(temp_list).setup_win_moves(current_player)
-			for pos in s_wins:
-				possible_setup_list.append((self.board_num[board[pos]//9],int(board[pos]%9)))
-		return possible_setup_list
-
 
 	def merge_2_dict_list(self, dict1, dict2):
 		keys = list(dict1.keys()) + list(dict2.keys())
@@ -154,7 +121,6 @@ class cube():
 			elif key in dict2:
 				new_dict[key] = dict2[key]
 		return new_dict
-
 
 class big_board(): #tic-tac-toe board object
 	def __init__(self):
@@ -175,7 +141,7 @@ class big_board(): #tic-tac-toe board object
 			temp_list = []
 			for pos in win_line:
 				temp_list.append(self.bigBoardList[pos])
-			cube_result = cube(temp_list,win_line).checkcubeVictory()
+			cube_result = cube(temp_list).checkcubeVictory()
 			if cube_result  != None:
 				return cube_result
 		return None
@@ -190,16 +156,6 @@ class big_board(): #tic-tac-toe board object
 			p_wins = cube(temp_list,win_line).check_possible_win_cube()
 			possible_wins_dict = self.merge_2_dict_list(possible_wins_dict, p_wins)
 		return possible_wins_dict
-
-	def check_setup_move(self,current_player):
-		setup_list = []
-		for win_line in win_combos:
-			temp_list = []
-			for pos in win_line:
-				temp_list.append(self.bigBoardList[pos]) 
-			s_wins = cube(temp_list,win_line).check_setup_cube(current_player)
-			setup_list = setup_list + s_wins
-		return setup_list
 
 	def merge_2_dict_list(self, dict1, dict2):
 		keys = list(dict1.keys()) + list(dict2.keys())
@@ -334,50 +290,9 @@ class aGame():
 			moves_away += 1
 		print(best_move)
 		if len(best_move) == 0:
-			s_wins = self.theBigBoard.check_setup_move(self.playersSymbol[self.currentTurn])
-			print(s_wins)
-			move_count_dict = {}
-			for space in s_wins:
-				if space in move_count_dict:
-					move_count_dict[space] += 1
-				else:
-					move_count_dict[space] = 1
-			print(move_count_dict)
-			if len(move_count_dict) > 0:
-				max_value = 0
-				for k,v in move_count_dict.items():
-					if v > max_value:
-						max_value = v
-				print(max_value)
-				best_s_win = []
-				for k,v in move_count_dict.items():
-					if v == max_value:
-						best_s_win.append(k)
-				print(best_s_win)
-				if len(best_s_win) > 0:
-					best_move = choice(best_s_win)
-		if len(best_move) == 0:
-			move_order = []
-			for i in [4,1,3,5,7,0,2,6,8]:
-				move_order.append((i,4))
-			for i in [1,3,5,7,0,2,6,8]:
-				move_order.append((4,i))
-			for k in range(9):
-				for c in [0,2,6,8]:
-					move_order.append((c,k))
-			notIsValidMove = True
-			j = 0 
-			while(notIsValidMove):
-				try:
-					move = move_order[j]
-					j += 1
-				except:
-					move = (random.randint(0,8),random.randint(0,8))
-				if(self.theBigBoard.getSpotSymbol(move[0]+1, move[1]+1) == " "):
-					notIsValidMove = False
-					best_move = move
-		print((best_move[0]+1,best_move[1]+1))
-		self.theBigBoard.receiveInput(best_move[0]+1,best_move[1]+1, self.playersSymbol[self.currentTurn])
+			self.askForInput()
+		else:
+			self.theBigBoard.receiveInput(best_move[0]+1,best_move[1]+1, self.playersSymbol[self.currentTurn])
 
 	#Makes random monkey move
 	def makeMonkeyMove(self):
